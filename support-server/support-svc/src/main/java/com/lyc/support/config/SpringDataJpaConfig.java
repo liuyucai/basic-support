@@ -15,7 +15,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
-@EnableJpaRepositories(basePackages = {"com.lyc.support.dao"},
+@EnableJpaRepositories(basePackages = {"com.lyc.support.repository"},
         repositoryImplementationPostfix = "Impl",
         entityManagerFactoryRef = "entityManagerFactory",
         transactionManagerRef = "transactionManager")
