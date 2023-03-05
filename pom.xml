@@ -17,7 +17,7 @@
     <module>auth-server</module>
     <module>user-account-server</module>
     <module>portal-server</module>
-      <module>gateway</module>
+    <module>gateway</module>
     <module>support-common</module>
   </modules>
   <packaging>pom</packaging>
