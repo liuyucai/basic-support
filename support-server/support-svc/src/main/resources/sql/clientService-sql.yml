@@ -1,0 +1,17 @@
+client-service:
+  query-page-sql:
+    columns: |
+      select
+        s.id,
+        s.name,
+        s.code,
+        s.description,
+        cs.id as client_service_id
+
+    tables: |
+      from
+        oauth_service s
+      left join oauth_client_service cs on s.id = cs.service_id and cs.deleted = 0
+    condition: |
+      where
+        s.deleted = 0

@@ -1,0 +1,30 @@
+org-user:
+  query-role-client-by-id-sql:
+    columns: |
+      select
+        f.id,
+        re.resource_id as client_id
+    tables: |
+      from
+        (
+        select
+          r.id
+        from
+          sys_role r
+        left join sys_role_disabled d on d.role_id = r.id and d.org_user_id = :orgUserId  and d.deleted = 0
+        where
+          r.deleted = 0 and r.org_id in (:orgIds) and r.type = 'DEFAULT' AND d.id is null
+
+        UNION
+
+        select
+          r.id
+        from
+          sys_role_user ru
+        left join sys_role r on ru.role_id = r.id  and r.deleted = '0'
+        where
+          ru.org_user_id = :orgUserId  and ru.deleted = '0'
+      ) f
+      left join sys_role_resource1 re on f.id = re.role_id and re.deleted = '0' and resource_id = :clientId
+      where
+        re.id is not null

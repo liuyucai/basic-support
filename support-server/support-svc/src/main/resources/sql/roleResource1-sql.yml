@@ -1,0 +1,96 @@
+role-resource1:
+  query-client-list-sql:
+    columns: |
+      select
+        c.id,
+        c.name,
+        c.icon,
+        r.id as role_resource_id
+    tables: |
+      from
+        oauth_client c
+      left join sys_role_resource1 r on c.id = r.resource_id and r.resource_type = 'CLIENT' and r.deleted = 0 and r.role_id = :roleId
+    condition: |
+      where
+        c.deleted = 0
+      order by c.sort ASC
+
+
+  query-menu-list-sql:
+    columns: |
+      select
+        m.id,
+        m.client_id,
+        m.pid,
+        m.name,
+        m.menu_type,
+        m.path,
+        m.icon,
+        m.action,
+        m.visiable,
+        m.keep_alive,
+        m.sort,
+        r.id as role_resource_id
+    tables: |
+      from
+        oauth_client_menu1 m
+      left join sys_role_resource1 r on m.id = r.resource_id and r.resource_type = 'MENU' and r.deleted = 0 and r.role_id = :roleId
+    condition: |
+      where
+        m.deleted = 0  and m.client_id = :clientId
+      order by m.sort ASC
+
+
+  query-router-list-sql:
+    columns: |
+      select
+        cr.id,
+        cr.client_id,
+        cr.pid,
+        cr.name,
+        cr.path,
+        cr.type,
+        cr.permission,
+        cr.authentication,
+        cr.sort,
+        p.function_number,
+        r.id as role_resource_id
+    tables: |
+      from
+        oauth_client_router cr
+      left join sys_role_resource r on cr.id = r.resource_id and r.resource_type = 'ROUTER' and r.deleted = 0 and r.role_id = :roleId
+      left join (
+        select
+          pid,
+          count(1) as function_number
+        from
+          oauth_client_router
+        where deleted = 0 group by pid
+      ) p on cr.id = p.pid
+    condition: |
+      where
+        cr.deleted = 0  and cr.client_id = :clientId  and cr.type = 'ROUTER'  and cr.authentication = '1'
+      order by cr.sort ASC
+
+
+  query-function-list-sql:
+    columns: |
+      select
+        cr.id,
+        cr.client_id,
+        cr.pid,
+        cr.name,
+        cr.path,
+        cr.type,
+        cr.permission,
+        cr.authentication,
+        cr.sort,
+        r.id as role_resource_id
+    tables: |
+      from
+        oauth_client_router cr
+      left join sys_role_resource r on cr.id = r.resource_id and r.resource_type = 'ROUTER' and r.deleted = 0 and r.role_id = :roleId
+    condition: |
+      where
+        cr.deleted = 0  and cr.client_id = :clientId  and cr.type = 'FUNCTION' and cr.pid = :pid
+      order by cr.sort ASC

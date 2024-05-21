@@ -2,6 +2,9 @@ package com.lyc.support.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
+import com.lyc.simple.entity.BaseEntity;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -9,18 +12,18 @@ import org.hibernate.annotations.GenericGenerator;
 import java.util.Date;
 
 /**
- * @author 
- * @version Id: SysOrg.java, v 0.1 2023/03/05 18:26  Exp $$
- */
+ * @author: liuyucai
+ * @Created: 2023/04/28 22:35 
+ * @Description:
+ **/
 
-@Setter
-@Getter
+@Data
 @ToString
 @Entity
 @Table ( name ="sys_org" )
-public class Org implements Serializable {
+public class Org extends BaseEntity<String> implements Serializable {
 
-	private static final long serialVersionUID =  627663626889499194L;
+	private static final long serialVersionUID =  4186685510418272482L;
 
 	/**
 	 * 编号
@@ -44,6 +47,12 @@ public class Org implements Serializable {
 	private String pid;
 
 	/**
+	 * 状态
+	 */
+   	@Column(name = "state")
+	private Integer state;
+
+	/**
 	 * 组织机构索引
 	 */
    	@Column(name = "org_index")
@@ -55,4 +64,13 @@ public class Org implements Serializable {
    	@Column(name = "sort")
 	private Integer sort;
 
+    @Override
+    public String getPrimaryKey() {
+        return this.id;
+    }
+
+    @Override
+    public void setPrimaryKey(String id) {
+        this.id = id;
+    }
 }

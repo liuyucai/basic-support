@@ -10,6 +10,7 @@ public enum ResultCode {
     SUCCESS("0000", "成功"),
     FAIL("0001", "失败"),
     PERMISSION("0002", "没有访问权限"),
+    ALREADY_EXIST_RECORD("0003", "记录已存在"),
     SYSTEM_ERROR("9998", "系统内部异常"),
     PARAM_VALID_FAIL("9999", "参数校验失败");
 

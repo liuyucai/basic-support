@@ -1,0 +1,128 @@
+org-user:
+
+  query-page-sql:
+    columns: |
+      select
+        ou.id,
+        ou.nick_name,
+        ou.enabled,
+        ou.description,
+        ou.create_time,
+        ou.type,
+        ou.user_id,
+        ou.org_id,
+        u.user_name,
+        u.real_name,
+        u.gender,
+        u.phone_no,
+        u.avatar,
+        o.name as org_name
+    tables: |
+      from
+        sys_org_user ou
+      left join sys_user_account u on ou.user_id = u.id
+      left join sys_org o on ou.org_id = o.id
+    condition: |
+      where
+        ou.deleted = '0'
+
+  query-detail-by-id-sql:
+    columns: |
+      select
+        ou.id,
+        ou.nick_name,
+        ou.enabled,
+        ou.description,
+        ou.user_id,
+        ou.org_id,
+        u.user_name,
+        o.name as org_name
+    tables: |
+      from
+        sys_org_user ou
+      left join sys_user_account u on ou.user_id = u.id
+      left join sys_org o on ou.org_id = o.id
+    condition: |
+      where
+        ou.id = :id
+
+
+  query-role-info-by-id-sql:
+    columns: |
+      select
+        r.id,
+        r.name,
+        r.org_id,
+        r.use_scope,
+        r.data_scope,
+        r.type,
+        r.sort,
+        r.description,
+        r.create_time,
+        r.create_user_id,
+        r.update_time,
+        r.update_user_id,
+        r.deleted
+    tables: |
+      from
+        sys_role_user ru
+      left join sys_role r on ru.role_id = r.id  and r.deleted = 0
+    condition: |
+      where
+        ru.org_user_id = :id  and ru.deleted = 0
+
+
+  query-role-setting-by-id-sql:
+    columns: |
+      select
+        f.id,
+        f.name,
+        f.org_id,
+        f.use_scope,
+        f.data_scope,
+        f.type,
+        f.sort,
+        f.description,
+        f.disabled_id,
+        f.role_user_id,
+        o.name as org_name
+    tables: |
+      from
+        (
+        select
+          r.id,
+          r.name,
+          r.org_id,
+          r.use_scope,
+          r.data_scope,
+          r.type,
+          r.sort,
+          r.description,
+          d.id AS disabled_id,
+          null as role_user_id
+        from
+          sys_role r
+        left join sys_role_disabled d on d.role_id = r.id and d.org_user_id = :orgUserId  and d.deleted = 0
+        where
+          r.deleted = 0 and r.org_id in (:orgIds) and r.type = 'DEFAULT' AND d.id is null
+
+        UNION
+
+        select
+          r.id,
+          r.name,
+          r.org_id,
+          r.use_scope,
+          r.data_scope,
+          r.type,
+          r.sort,
+          r.description,
+          null as disabled_id,
+          ru.id as role_user_id
+        from
+          sys_role_user ru
+        left join sys_role r on ru.role_id = r.id  and r.deleted = 0
+        where
+          ru.org_user_id = :orgUserId  and ru.deleted = 0
+      ) f
+      left join sys_org o on f.org_id = o.id

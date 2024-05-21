@@ -1,0 +1,24 @@
+client-menu1:
+  query-user-menu-sql:
+    columns: |
+      select
+        m.id,
+        m.pid,
+        m.name,
+        m.path,
+        m.menu_type,
+        m.icon,
+        m.action,
+        m.visiable,
+        m.keep_alive,
+        m.sort
+    tables: |
+      from
+        oauth_client_menu1 m
+      left join sys_role_resource1 re on m.id = re.resource_id and re.deleted = 0 and re.client_id = :clientId  and re.role_id in (:roleIds)
+
+    condition: |
+      where
+        m.client_id = :clientId  and re.id is not null
+
+

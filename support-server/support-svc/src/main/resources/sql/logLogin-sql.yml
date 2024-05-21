@@ -1,0 +1,26 @@
+log-login:
+  query-page-sql:
+    columns: |
+      select
+        l.id,
+        l.user_name,
+        l.org_user_id,
+        l.status,
+        l.login_time,
+        l.browser,
+        l.os,
+        l.ip_address,
+        l.ip_location,
+        l.login_info,
+        l.msg,
+        l.client_id,
+        u.nick_name,
+        t.name as client_name
+    tables: |
+      from
+        sys_log_login l
+      left join sys_org_user u on l.org_user_id = u.id
+      left join oauth_client t on l.client_id = t.id
+    condition: |
+      where
+        l.deleted = 0

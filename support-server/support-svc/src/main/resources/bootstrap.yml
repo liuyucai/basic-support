@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: support-svc
+  cloud:
+      nacos:
+        config:
+          # 是否开启配置中心 默认true
+          enabled: true
+          file-extension: yaml
+          group: DEFAULT_GROUP
+          # 自动刷新配置文件,默认true
+          refresh-enabled: true
+          # Nacos 认证用户
+#          username: nacos
+#          # Nacos 认证密码
+#          password: nacos
+          # 配置文件prefix
+          prefix: support-svc
+  profiles:
+    active: @env@   #这里使用@占位符和env标签，动态加载配置文件，否则要手动改写写对应的id名字，如：dev
+
+---
+spring:
+  profiles: dev
+  cloud:
+    nacos:
+      config:
+        namespace: develop
+        server-addr: 101.34.207.233:8848
+
+---
+spring:
+  profiles: prd
+  cloud:
+    nacos:
+      config:
+        server-addr: 101.34.207.233:8848

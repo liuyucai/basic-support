@@ -1,0 +1,22 @@
+client-router:
+  query-user-router-sql:
+    columns: |
+      select
+        r.id,
+        r.pid,
+        r.name,
+        r.path,
+        r.type,
+        r.permission,
+        r.authentication,
+        re.id as role_resource_id
+    tables: |
+      from
+        oauth_client_router r
+      left join sys_role_resource re on r.id = re.resource_id and re.deleted = 0 and re.client_id = :clientId  and re.role_id in (:roleIds)
+
+    condition: |
+      where
+        r.client_id = :clientId  and re.id is not null
+
+

@@ -2,13 +2,15 @@ package com.lyc.common.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author: liuyucai
  * @Created: 2023/2/22 9:10
  * @Description:
  */
 @Data
-public class ResponseVO<T> {
+public class ResponseVO<T> implements Serializable {
 
     private String resultCode;
 
@@ -47,6 +49,12 @@ public class ResponseVO<T> {
     public static <T> ResponseVO<T> fail(String desc) {
         ResponseVO<T> result = new ResponseVO();
         result.setResult(ResultCode.FAIL.getCode(), desc);
+        return result;
+    }
+
+    public static <T> ResponseVO<T> fail(String code,String desc) {
+        ResponseVO<T> result = new ResponseVO();
+        result.setResult(code, desc);
         return result;
     }
 

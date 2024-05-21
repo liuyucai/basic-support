@@ -1,0 +1,25 @@
+user:
+  query-page-sql:
+    columns: |
+      select
+        u.id,
+        u.user_name,
+        u.real_name,
+        u.identity_type,
+        u.identity_no,
+        u.birthday,
+        u.gender,
+        u.phone_no,
+        u.avatar,
+        u.enabled,
+        u.account_type,
+        u.effective_deadline,
+        u.create_time
+
+    tables: |
+      from
+        sys_org_user ou
+      left join sys_user_account u on u.id = ou.user_id and u.deleted = 0
+    condition: |
+      where
+        ou.deleted = 0

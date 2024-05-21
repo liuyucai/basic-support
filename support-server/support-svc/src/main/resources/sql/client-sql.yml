@@ -1,0 +1,27 @@
+client:
+  query-page-sql:
+    columns: |
+      select
+        c.id,
+        c.group_id,
+        c.name,
+        c.icon,
+        c.app_scene,
+        c.app_source,
+        c.client_secret,
+        c.grant_type,
+        c.state,
+        c.anonymous,
+        c.access_token_validity,
+        c.description,
+        c.sort,
+        c.redirect_uri,
+        g.name as group_name
+
+    tables: |
+      from
+        oauth_client c
+      left join oauth_client_group g on c.group_id = g.id
+    condition: |
+      where
+        c.deleted = 0
